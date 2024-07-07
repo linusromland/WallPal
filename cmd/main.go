@@ -1,12 +1,20 @@
 package main
 
 import (
+	"WallPal/pkg/integrations"
 	"WallPal/pkg/wallpaper"
 	"log"
 )
 
 func main() {
-	err := wallpaper.SetWallpaper("C:\\Users\\hello\\AppData\\Roaming\\.minecraft\\screenshots\\2024-06-17_18.00.36.png")
+	integration, err := integrations.NewIntegration("trafikverket")
+	if err != nil {
+		log.Fatalf("Failed to create integration: %v", err)
+	}
+
+	path, err := integration.Fetch()
+
+	err = wallpaper.SetWallpaper(path)
 	if err != nil {
 		log.Fatalf("Failed to set wallpaper: %v", err)
 	}
