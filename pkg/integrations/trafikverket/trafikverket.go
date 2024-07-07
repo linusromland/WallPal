@@ -3,6 +3,7 @@ package trafikverket
 import (
 	trafikverketTypes "WallPal/pkg/integrations/trafikverket/types"
 	"WallPal/pkg/integrations/types"
+	"WallPal/pkg/util"
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
@@ -54,6 +55,12 @@ func (t *TrafikverketIntegration) Fetch() (string, error) {
 	}
 	fmt.Println("Photo URL found:", photoUrl)
 
+	err = util.DownloadImage(photoUrl, util.DOWNLOAD_DIRECTORY)
+	if err != nil {
+		return "", fmt.Errorf("failed to download image: %w", err)
+	}
+
+	return util.DOWNLOAD_DIRECTORY, nil
 }
 
 func SendRequest[T any](requestBody interface{}, responseBody *T) error {
