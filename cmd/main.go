@@ -3,10 +3,15 @@ package main
 import (
 	"WallPal/pkg/integrations"
 	"WallPal/pkg/wallpaper"
+	"WallPal/ui"
 	"log"
 )
 
 func main() {
+	// Initialize the UI
+	ui.InitUI()
+ 
+	// Just temporary code to test the integration
 	integration, err := integrations.NewIntegration("trafikverket")
 	if err != nil {
 		log.Fatalf("Failed to create integration: %v", err)
