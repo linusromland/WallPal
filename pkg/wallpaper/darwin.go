@@ -1,4 +1,4 @@
-//UNTESTED CODE
+//go:build darwin
 
 package wallpaper
 
