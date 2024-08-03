@@ -1,9 +1,12 @@
+//go:build windows
+
 package wallpaper
 
 import (
-	"golang.org/x/sys/windows/registry"
 	"os/exec"
 	"syscall"
+
+	"golang.org/x/sys/windows/registry"
 )
 
 type WindowsWallpaperChanger struct{}

@@ -1,6 +1,9 @@
 package wallpaper
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type WallpaperChanger interface {
 	SetWallpaper(path string) error
@@ -19,5 +22,7 @@ func SetWallpaper(path string) error {
 }
 
 func RegisterChanger(changer WallpaperChanger) {
+	 fmt.Printf("Registering changer: %T\n", changer)
+	
 	currentChanger = changer
 }
