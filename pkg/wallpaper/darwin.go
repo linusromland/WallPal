@@ -13,6 +13,6 @@ func init() {
 }
 
 func (m *MacOSWallpaperChanger) SetWallpaper(path string) error {
-	cmd := exec.Command("osascript", "-e", `tell application "Finder" to set desktop picture to POSIX file "`+path+`"`)
-	return cmd.Run()
+	exec.Command("/bin/bash", "-c", "/Users/linusromland/Documents/GitHub/WallPal/pkg/wallpaper/darwin/setter.applescript"+" "+path).Run()
+	return nil
 }
