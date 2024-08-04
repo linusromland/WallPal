@@ -69,3 +69,19 @@ func GetImagePath() (string, error) {
 
 	return filepath.Join(wallpaperDir, wallpaperFileName), nil
 }
+
+func GetDatabasePath() (string, error) {
+	appDir, err := getAppDir()
+	if err != nil {
+		return "", err
+	}
+
+	databaseDir := filepath.Join(appDir, DATABASE_DIRECTORY)
+
+	err = createPathRecursiveIfNeeded(databaseDir)
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(databaseDir, DATABASE_FILE_NAME), nil
+}

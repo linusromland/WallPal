@@ -1,6 +1,7 @@
 package util
 
 import (
+	"WallPal/pkg/database"
 	"fmt"
 	"image"
 	"image/gif"
@@ -29,6 +30,30 @@ func DownloadImage(photoURL string, downloadURL string) error {
 		return fmt.Errorf("failed to decode image: %v", err)
 	}
 
+	imgHash := hashImage(img)
+	if imgHash == "" {
+		return fmt.Errorf("failed to hash image")
+	}
+
+	dbPath, err := GetDatabasePath()
+	if err != nil {
+		return fmt.Errorf("failed to get database path: %v", err)
+	}
+
+	previousImageHash, err := database.Get(dbPath, DATABASE_IMAGE_HASH_KEY)
+	if err != nil {
+		return fmt.Errorf("failed to get previous image hash: %v", err)
+	}
+
+	if imgHash == previousImageHash {
+		return fmt.Errorf("image is the same as the previous one")
+	}
+
+	err = database.Set(dbPath, DATABASE_IMAGE_HASH_KEY, imgHash)
+	if err != nil {
+		return fmt.Errorf("failed to set image hash: %v", err)
+	}
+
 	out, err := os.Create(downloadURL)
 	if err != nil {
 		return fmt.Errorf("failed to create file: %v", err)
@@ -51,4 +76,9 @@ func DownloadImage(photoURL string, downloadURL string) error {
 	}
 
 	return nil
+}
+
+func hashImage(img image.Image) string {
+	// This is a placeholder for the actual hashing function
+	return "placeholder"
 }
