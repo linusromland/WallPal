@@ -3,6 +3,7 @@
 package wallpaper
 
 import (
+	"fmt"
 	"os/exec"
 	"syscall"
 
@@ -31,6 +32,9 @@ func (w *WindowsWallpaperChanger) SetWallpaper(path string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Wallpaper set to:", path)
+
 
 	cmd := exec.Command("RUNDLL32.EXE", "user32.dll,UpdatePerUserSystemParameters")
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}

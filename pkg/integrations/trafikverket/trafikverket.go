@@ -55,12 +55,19 @@ func (t *TrafikverketIntegration) Fetch() (string, error) {
 	}
 	fmt.Println("Photo URL found:", photoUrl)
 
-	err = util.DownloadImage(photoUrl, util.DOWNLOAD_DIRECTORY)
+	downloadPath, err := util.GetImagePath()
+	if err != nil {
+		return "", fmt.Errorf("failed to get image path: %w", err)
+	}
+
+	fmt.Println("Downloading image to:", downloadPath)
+
+	err = util.DownloadImage(photoUrl, downloadPath)
 	if err != nil {
 		return "", fmt.Errorf("failed to download image: %w", err)
 	}
 
-	return util.DOWNLOAD_DIRECTORY, nil
+	return downloadPath, nil
 }
 
 func SendRequest[T any](requestBody interface{}, responseBody *T) error {
