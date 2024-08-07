@@ -3,7 +3,6 @@ package main
 import (
 	"WallPal/pkg/integrations"
 	"WallPal/pkg/wallpaper"
-	"fmt"
 	"log"
 )
 
@@ -14,11 +13,6 @@ func main() {
 	}
 
 	path, err := integration.Fetch()
-	if err != nil {
-		log.Fatalf("Failed to fetch data: %v", err)
-	}
-
-	fmt.Println("Setting wallpaper to:", path)
 
 	err = wallpaper.SetWallpaper(path)
 	if err != nil {

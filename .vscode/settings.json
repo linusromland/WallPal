@@ -1,11 +1,3 @@
 {
-  "cSpell.words": [
-    "DATETIME",
-    "fullsize",
-    "osascript",
-    "POSIX",
-    "scpt",
-    "trafikverket",
-    "USERPROFILE"
-  ]
+  "cSpell.words": ["osascript", "POSIX", "scpt", "trafikverket", "USERPROFILE"]
 }

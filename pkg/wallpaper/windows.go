@@ -24,7 +24,7 @@ func (w *WindowsWallpaperChanger) SetWallpaper(path string) error {
 	defer func(key registry.Key) {
 		err := key.Close()
 		if err != nil {
-			fmt.Println("Failed to close registry key:", err)
+
 		}
 	}(key)
 
