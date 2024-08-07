@@ -6,29 +6,16 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func DownloadImage(photoURL string, downloadURL string) error {
+func DownloadImage(image image.Image, downloadURL string) error {
 	fileExtension := strings.ToLower(filepath.Ext(downloadURL))
 	if fileExtension == "" {
 		return fmt.Errorf("no file extension found in download URL")
 	}
-
-	resp, err := http.Get(photoURL)
-	if err != nil {
-		return fmt.Errorf("failed to download image: %v", err)
-	}
-	defer resp.Body.Close()
-
-	img, _, err := image.Decode(resp.Body)
-	if err != nil {
-		return fmt.Errorf("failed to decode image: %v", err)
-	}
-
 	out, err := os.Create(downloadURL)
 	if err != nil {
 		return fmt.Errorf("failed to create file: %v", err)
@@ -37,11 +24,11 @@ func DownloadImage(photoURL string, downloadURL string) error {
 
 	switch fileExtension {
 	case ".jpeg", ".jpg":
-		err = jpeg.Encode(out, img, nil)
+		err = jpeg.Encode(out, image, nil)
 	case ".png":
-		err = png.Encode(out, img)
+		err = png.Encode(out, image)
 	case ".gif":
-		err = gif.Encode(out, img, nil)
+		err = gif.Encode(out, image, nil)
 	default:
 		return fmt.Errorf("unsupported file extension: %s", fileExtension)
 	}

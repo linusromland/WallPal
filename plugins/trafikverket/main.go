@@ -1,27 +1,35 @@
-package trafikverket
+package main
 
 import (
-	trafikverketTypes "WallPal/pkg/integrations/trafikverket/types"
-	"WallPal/pkg/integrations/types"
-	"WallPal/pkg/util"
+	trafikverketTypes "WallPal/plugins/trafikverket/types"
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"image"
 	"io/ioutil"
 	"net/http"
 )
 
-type TrafikverketIntegration struct {
+type TrafikverketPlugin struct {
 }
 
-func NewTrafikverketIntegration() types.Integration {
-	return &TrafikverketIntegration{}
+func (p *TrafikverketPlugin) Init() error {
+    fmt.Println("Trafikverket plugin initialized")
+    return nil
 }
 
-func (t *TrafikverketIntegration) Fetch() (string, error) {
-	fmt.Println("Fetching data from Trafikverket")
-	request := trafikverketTypes.Request{
+func (p *TrafikverketPlugin) GetName() string {
+	return "trafikverket"
+}
+
+func (p *TrafikverketPlugin) Ready() bool {
+    // Temp ready check
+    return true
+}
+
+func (p *TrafikverketPlugin) Fetch() (image.Image, error) {
+    request := trafikverketTypes.Request{
 		Login: trafikverketTypes.Login{
 			AuthenticationKey: "96c58a7582f14b9b8f232e8bcf1b96e1",
 		},
@@ -39,13 +47,13 @@ func (t *TrafikverketIntegration) Fetch() (string, error) {
 	}
 
 	var response trafikverketTypes.Response
-	err := SendRequest(request, &response)
+	err := SendRequest(p, request, &response)
 	if err != nil {
-		return "", fmt.Errorf("failed to send request: %w", err)
+		return nil, fmt.Errorf("failed to send request: %w", err)
 	}
 
 	if len(response.ResponseBody.Result) == 0 {
-		return "", fmt.Errorf("no results found")
+		return nil, fmt.Errorf("no results found")
 	}
 
 	cameraResponse := response.ResponseBody.Result[0].Camera[0]
@@ -55,22 +63,21 @@ func (t *TrafikverketIntegration) Fetch() (string, error) {
 	}
 	fmt.Println("Photo URL found:", photoUrl)
 
-	downloadPath, err := util.GetImagePath()
+	resp, err := http.Get(photoUrl)
 	if err != nil {
-		return "", fmt.Errorf("failed to get image path: %w", err)
+		return nil, fmt.Errorf("failed to download image: %v", err)
+	}
+	defer resp.Body.Close()
+
+	img, _, err := image.Decode(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode image: %v", err)
 	}
 
-	fmt.Println("Downloading image to:", downloadPath)
-
-	err = util.DownloadImage(photoUrl, downloadPath)
-	if err != nil {
-		return "", fmt.Errorf("failed to download image: %w", err)
-	}
-
-	return downloadPath, nil
+	return img, nil
 }
 
-func SendRequest[T any](requestBody interface{}, responseBody *T) error {
+func SendRequest[T any](p *TrafikverketPlugin, requestBody interface{}, responseBody *T) error {
 	xmlData, err := xml.Marshal(requestBody)
 	if err != nil {
 		return fmt.Errorf("failed to marshal XML: %w", err)
@@ -105,3 +112,7 @@ func SendRequest[T any](requestBody interface{}, responseBody *T) error {
 
 	return nil
 }
+
+
+var PluginInstance TrafikverketPlugin
+func main() {}

@@ -8,4 +8,6 @@ const (
 	WALLPAPER_FILE_EXT  = ".jpg"
 
 	KEEP_OLD_WALLPAPERS = true
+
+	PLUGINS_DIRECTORY = "plugins"
 )

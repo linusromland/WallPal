@@ -69,3 +69,21 @@ func GetImagePath() (string, error) {
 
 	return filepath.Join(wallpaperDir, wallpaperFileName), nil
 }
+
+func GetPluginsPath() (string, error) {
+	appDir, err := getAppDir()
+	if err != nil {
+		return "", err
+	}
+
+	pluginDir := filepath.Join(appDir, PLUGINS_DIRECTORY)
+
+	err = createPathRecursiveIfNeeded(pluginDir)
+	if err != nil {
+		return "", err
+	}
+
+
+	return pluginDir, nil
+}
+
