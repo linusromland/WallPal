@@ -1,6 +1,5 @@
 #[cfg(target_os = "windows")]
 pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    use std::ptr::null_mut;
     use winapi::um::winuser::{SystemParametersInfoW, SPI_SETDESKWALLPAPER};
     use std::ffi::OsStr;
     use std::os::windows::ffi::OsStrExt;

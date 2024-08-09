@@ -4,15 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# Windows-specific dependencies
-winapi = { version = "0.3", optional = true }
-
-# macOS-specific dependencies
-objc = { version = "0.2", optional = true }
-cocoa = { version = "0.24", optional = true }
 
 [target.'cfg(windows)'.dependencies]
-winapi = "0.3"
+winapi = { version = "0.3", features = ["winuser"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc = "0.2"

@@ -3,7 +3,7 @@ mod wallpaper;
 use std::process;
 
 fn main() {
-    if let Err(e) = wallpaper::set_wallpaper("/Users/linusromland/Downloads/wallpaper.webp") {
+    if let Err(e) = wallpaper::set_wallpaper("C:\\Users\\hello\\Pictures\\Screenshots\\Screenshot 2024-05-25 103801.png") {
         eprintln!("Error setting wallpaper: {}", e);
         process::exit(1);
     }
