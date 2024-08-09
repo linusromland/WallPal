@@ -402,7 +402,3 @@ appsettings.json
 
 sounds/*
 !sounds/.gitkeep
-
-# Ignore all plugins
-WallpaperChanger/Plugins/*
-!WallpaperChanger/Plugins/sample_image.jpg
