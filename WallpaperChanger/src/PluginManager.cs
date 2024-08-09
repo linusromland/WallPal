@@ -32,9 +32,16 @@ namespace WallpaperChanger
                 {
                     if (typeof(IPlugin).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
                     {
-                        Console.WriteLine($"Plugin found: {type.FullName}");
                         IPlugin plugin = (IPlugin)Activator.CreateInstance(type, _appServices);
-                        _plugins.Add(plugin);
+                        if (plugin.IsReady())
+                        {
+                            Console.WriteLine($"Plugin {plugin.Name} is ready.");
+                            _plugins.Add(plugin);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Plugin {plugin.Name} is not ready.");
+                        }
                     }
                     else
                     {
