@@ -2,17 +2,12 @@
 
 namespace SamplePlugin;
 
-public class SamplePlugin : IPlugin
+public class SamplePlugin(IApplicationServices appServices) : IPlugin
 {
-    private readonly IApplicationServices _appServices;
+    private readonly IApplicationServices _appServices = appServices;
     public string Name { get; } = "SamplePlugin";
 
-    public SamplePlugin(IApplicationServices appServices)
-    {
-        _appServices = appServices;
-    }
-
-    public string GetImagePath()
+    private string GetImagePath()
     {
         return Path.Combine(Directory.GetCurrentDirectory(), "Plugins", "sample_image.jpg");
     }
