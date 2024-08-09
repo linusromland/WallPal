@@ -21,7 +21,6 @@ namespace WallPal
             }
 
             IPlugin? plugin = pluginManager.GetPlugin(source);
-
             if (plugin != null)
             {
                 if (plugin.IsReady())
@@ -30,13 +29,17 @@ namespace WallPal
                     using Stream imageStream = plugin.GetWallpaperStream();
                     if (imageStream != null)
                     {
-                    Console.WriteLine($"Changing wallpaper using plugin: {plugin.Name}");
-                    wallpaperChanger.ChangeWallpaper(imageStream);
+                        Console.WriteLine($"Changing wallpaper using plugin: {plugin.Name}");
+                        wallpaperChanger.ChangeWallpaper(imageStream);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Plugin did not provide an image stream.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Plugin did not provide an image stream.");
-                    }
+                    Console.WriteLine("Plugin is not ready.");
                 }
             }
             else
