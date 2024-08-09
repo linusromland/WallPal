@@ -1,4 +1,3 @@
-
 #[cfg(target_os = "windows")]
 pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn std::error::Error>> {
     use std::ptr::null_mut;
@@ -19,17 +18,28 @@ pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(target_os = "macos")]
 pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn std::error::Error>> {
     use cocoa::base::{nil, YES};
-    use cocoa::foundation::{NSString, NSURL};
-    use objc::runtime::{Object, BOOL};
-    use objc::{class, msg_send, sel, sel_impl};
+    use cocoa::foundation::{NSURL, NSString};
+    use objc::runtime::{Class, Object, BOOL};
+    use objc::{msg_send, sel, sel_impl};
+    use std::path::Path;
+    use std::ffi::CString;
+
+    // Check if the file exists before trying to set it as wallpaper
+    if !Path::new(path).exists() {
+        return Err("File does not exist".into());
+    }
+
+    let nsurl = unsafe {
+        let nsstring = NSString::alloc(nil).init_str(path);
+        NSURL::fileURLWithPath_(nil, nsstring)
+    };
 
     unsafe {
-        let workspace: *mut Object = msg_send![class!(NSWorkspace), sharedWorkspace];
-        let url = NSURL::fileURLWithPath_(
-            nil,
-            NSString::alloc(nil).init_str(path),
-        );
-        let result: BOOL = msg_send![workspace, setDesktopImageURL: url forScreen: nil options: nil];
+        let workspace: *mut Object = msg_send![Class::get("NSWorkspace").unwrap(), sharedWorkspace];
+        let screen: *mut Object = nil; // nil for all screens
+        let options: *mut Object = nil; // nil for default options
+
+        let result: BOOL = msg_send![workspace, setDesktopImageURL: nsurl forScreen: screen options: options];
 
         if result == YES {
             Ok(())
