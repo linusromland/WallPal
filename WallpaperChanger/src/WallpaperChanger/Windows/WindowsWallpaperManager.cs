@@ -17,6 +17,7 @@ namespace WallPal.Windows
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentException("Image path cannot be null or empty.");
 
+            Console.WriteLine($"Setting Windows wallpaper to: {imagePath}");
             int result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
             if (result == 0)
