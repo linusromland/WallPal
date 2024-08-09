@@ -41,7 +41,7 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
 
     public JObject GetDefaultConfig()
     {
-        ConfigStruct config = new ConfigStruct
+        ConfigStruct config = new()
         {
             imagePath = ""
         };

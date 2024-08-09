@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Newtonsoft.Json.Linq;
 
-
 namespace TrafficCameraProxy
 {
     public struct ConfigStruct
@@ -39,7 +38,7 @@ namespace TrafficCameraProxy
 
         public JObject GetDefaultConfig()
         {
-            ConfigStruct config = new ConfigStruct
+            ConfigStruct config = new()
             {
                 serverURL = "https://trafficcamera.markus.romland.dev/",
                 cameraId = "SE_STA_CAMERA_Orion_4500003"

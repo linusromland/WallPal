@@ -7,11 +7,11 @@ namespace WallPal
     {
         static void Main(string[] args)
         {
-            WallpaperChanger wallpaperChanger = new WallpaperChanger();
+            WallpaperChanger wallpaperChanger = new();
 
 
             string pluginDirectory = DirectoryHelper.GetPluginsDirectory();
-            PluginManager pluginManager = new PluginManager(pluginDirectory);
+            PluginManager pluginManager = new(pluginDirectory);
 
             string? source = ConfigManager.GetConfigValue("source");
             if (source == null)

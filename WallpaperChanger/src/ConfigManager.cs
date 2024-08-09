@@ -3,8 +3,6 @@ using Newtonsoft.Json.Linq;
 
 namespace WallPal
 {
-
-
     public static class ConfigManager
     {
         private static JObject GetConfig()
@@ -13,7 +11,7 @@ namespace WallPal
 
             if (!File.Exists(configPath))
             {
-                JObject defaultConfig = new JObject
+                JObject defaultConfig = new()
                 {
                     { "refreshInterval", 5 },
                     { "source", "SamplePlugin" }, // TODO: To be changed to be per time and stuff

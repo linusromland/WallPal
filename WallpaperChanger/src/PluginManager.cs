@@ -13,7 +13,7 @@ namespace WallPal
         public PluginManager(string pluginDirectory)
         {
             _pluginDirectory = pluginDirectory;
-            _plugins = new List<IPlugin>();
+            _plugins = [];
             LoadPlugins();
         }
 
@@ -42,10 +42,8 @@ namespace WallPal
                             continue;
                         }
 
-                        ServiceCollection serviceCollection = new ServiceCollection();
+                        ServiceCollection serviceCollection = new();
                         serviceCollection.AddSingleton<IApplicationServices>(new ApplicationServices(pluginName));
-
-                        // Build service provider
                         ServiceProvider? serviceProvider = serviceCollection.BuildServiceProvider();
                         IApplicationServices? appServices = serviceProvider.GetRequiredService<IApplicationServices>();
 
