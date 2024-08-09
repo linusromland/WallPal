@@ -1,15 +1,34 @@
-﻿using System;
-using Interfaces;
+﻿using Interfaces;
 
 namespace WallPal
 {
     class Program
     {
-        static void Main(string[] args)
+        private static WallpaperChanger _wallpaperChanger = new();
+
+        static async Task Main(string[] args)
         {
-            WallpaperChanger wallpaperChanger = new();
+            while (true)
+            {
+                ChangeWallpaper();
 
+                int? refreshInterval = ConfigManager.GetConfigIntValue("refreshInterval");
+                if (refreshInterval == null)
+                {
+                    Console.WriteLine("No refresh interval specified in config file. Using default value of 5 minutes.");
+                    refreshInterval = 5 * 60;
+                }
+                else
+                {
+                    Console.WriteLine($"Next wallpaper change in {refreshInterval} seconds.");
+                }
 
+                await Task.Delay(refreshInterval.Value * 1000);
+            }
+        }
+
+        public static void ChangeWallpaper()
+        {
             string pluginDirectory = DirectoryHelper.GetPluginsDirectory();
             PluginManager pluginManager = new(pluginDirectory);
 
@@ -30,7 +49,7 @@ namespace WallPal
                     if (imageStream != null)
                     {
                         Console.WriteLine($"Changing wallpaper using plugin: {plugin.Name}");
-                        wallpaperChanger.ChangeWallpaper(imageStream);
+                        _wallpaperChanger.ChangeWallpaper(imageStream);
                     }
                     else
                     {
