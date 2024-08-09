@@ -5,7 +5,7 @@ namespace SamplePlugin;
 
 public struct ConfigStruct
 {
-    public string ImagePath;
+    public string imagePath;
 }
 
 public class SamplePlugin(IApplicationServices appServices) : IPlugin
@@ -17,7 +17,7 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
     {
         JObject config = _appServices.GetConfig(GetDefaultConfig());
 
-        string? imagePath = config?["ImagePath"]?.ToString();
+        string? imagePath = config?["imagePath"]?.ToString();
         if (imagePath != null)
         {
             return imagePath;
@@ -43,7 +43,7 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
     {
         ConfigStruct config = new ConfigStruct
         {
-            ImagePath = ""
+            imagePath = ""
         };
 
         return JObject.FromObject(config);
