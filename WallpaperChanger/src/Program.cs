@@ -1,7 +1,7 @@
 ﻿using System;
 using Interfaces;
 
-namespace WallpaperChanger
+namespace WallPal
 {
     class Program
     {

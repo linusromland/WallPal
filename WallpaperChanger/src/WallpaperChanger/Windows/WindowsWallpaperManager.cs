@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WallpaperChanger.Windows
+namespace WallPal.Windows
 {
     public class WindowsWallpaperManager : IWallpaperManager
     {

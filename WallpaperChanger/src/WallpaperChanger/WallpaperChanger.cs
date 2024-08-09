@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace WallpaperChanger
+namespace WallPal
 {
     public class WallpaperChanger
     {

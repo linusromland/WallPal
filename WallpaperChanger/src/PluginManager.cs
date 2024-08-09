@@ -2,7 +2,7 @@ using System.Reflection;
 using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace WallpaperChanger
+namespace WallPal
 {
     public class PluginManager
     {

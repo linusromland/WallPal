@@ -1,7 +1,7 @@
 using Interfaces;
 using Newtonsoft.Json.Linq;
 
-namespace WallpaperChanger
+namespace WallPal
 {
     public class ApplicationServices : IApplicationServices
     {

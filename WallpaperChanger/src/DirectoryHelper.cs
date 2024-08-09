@@ -1,4 +1,4 @@
-namespace WallpaperChanger
+namespace WallPal
 {
     public static class DirectoryHelper
     {
