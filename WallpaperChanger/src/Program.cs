@@ -1,5 +1,6 @@
 ﻿using System;
 using Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WallpaperChanger
 {
@@ -9,9 +10,15 @@ namespace WallpaperChanger
         {
             WallpaperChanger wallpaperChanger = new WallpaperChanger();
 
-            // Example of using a plugin
+            ServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton<IApplicationServices, ApplicationServices>();
+
+            // Build service provider
+            ServiceProvider? serviceProvider = serviceCollection.BuildServiceProvider();
+            IApplicationServices? appServices = serviceProvider.GetRequiredService<IApplicationServices>();
+
             string pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
-            PluginManager pluginManager = new PluginManager(pluginDirectory);
+            PluginManager pluginManager = new PluginManager(pluginDirectory, appServices);
             IPlugin? plugin = pluginManager.GetPlugins().FirstOrDefault();
 
             if (plugin != null)

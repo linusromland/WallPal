@@ -12,10 +12,13 @@ namespace WallpaperChanger
         private readonly string _pluginDirectory;
         private readonly List<IPlugin> _plugins;
 
-        public PluginManager(string pluginDirectory)
+        private readonly IApplicationServices _appServices;
+
+        public PluginManager(string pluginDirectory, IApplicationServices appServices)
         {
             _pluginDirectory = pluginDirectory;
             _plugins = new List<IPlugin>();
+            _appServices = appServices;
             LoadPlugins();
         }
 
@@ -30,7 +33,7 @@ namespace WallpaperChanger
                     if (typeof(IPlugin).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
                     {
                         Console.WriteLine($"Plugin found: {type.FullName}");
-                        IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                        IPlugin plugin = (IPlugin)Activator.CreateInstance(type, _appServices);
                         _plugins.Add(plugin);
                     }
                     else
