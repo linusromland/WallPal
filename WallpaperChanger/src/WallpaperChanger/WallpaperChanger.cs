@@ -18,9 +18,17 @@ namespace WallpaperChanger
             }
         }
 
-        public void ChangeWallpaper(string imagePath)
+        public void ChangeWallpaper(Stream imageStream)
         {
-            _wallpaperManager.SetWallpaper(imagePath);
+            string tempFilePath = Path.GetTempFileName() + Path.GetExtension(Path.GetTempFileName());
+            using (var fileStream = File.Create(tempFilePath))
+            {
+                imageStream.CopyTo(fileStream);
+            }
+
+            _wallpaperManager.SetWallpaper(tempFilePath);
+
+            File.Delete(tempFilePath);
         }
     }
 }
