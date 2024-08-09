@@ -1,6 +1,12 @@
 ﻿using Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace SamplePlugin;
+
+public struct ConfigStruct
+{
+    public string imagePath;
+}
 
 public class SamplePlugin(IApplicationServices appServices) : IPlugin
 {
@@ -9,7 +15,16 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
 
     private string GetImagePath()
     {
-        return Path.Combine(Directory.GetCurrentDirectory(), "Plugins", "sample_image.jpg");
+        JObject config = _appServices.GetConfig(GetDefaultConfig());
+
+        string? imagePath = config?["imagePath"]?.ToString();
+        if (imagePath != null)
+        {
+            return imagePath;
+        }
+
+        return "";
+
     }
 
     public bool IsReady()
@@ -20,9 +35,18 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
 
     public Stream GetWallpaperStream()
     {
-        Console.WriteLine("Getting wallpaper stream from SamplePlugin. App directory: " + _appServices.GetAppDirectory());
         string imagePath = GetImagePath();
         return File.OpenRead(imagePath);
+    }
+
+    public JObject GetDefaultConfig()
+    {
+        ConfigStruct config = new ConfigStruct
+        {
+            imagePath = ""
+        };
+
+        return JObject.FromObject(config);
     }
 
 }
