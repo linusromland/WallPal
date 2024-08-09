@@ -1,16 +1,18 @@
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace WallPal
 {
     public class WallpaperChanger
     {
-        private readonly IWallpaperManager _wallpaperManager;
+        private string lastHash = string.Empty;
+        private readonly IWallpaperManager wallpaperManager;
 
         public WallpaperChanger()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                _wallpaperManager = new Windows.WindowsWallpaperManager();
+                wallpaperManager = new Windows.WindowsWallpaperManager();
             }
             else
             {
@@ -20,15 +22,36 @@ namespace WallPal
 
         public void ChangeWallpaper(Stream imageStream)
         {
+            string hash = ComputeHashFromStream(imageStream);
+            if (hash == lastHash && !string.IsNullOrEmpty(lastHash))
+            {
+                Console.WriteLine("Image has not changed. Skipping wallpaper change.");
+                return;
+            }
+
+            lastHash = hash;
+
             string tempFilePath = Path.GetTempFileName() + Path.GetExtension(Path.GetTempFileName());
             using (var fileStream = File.Create(tempFilePath))
             {
                 imageStream.CopyTo(fileStream);
             }
 
-            _wallpaperManager.SetWallpaper(tempFilePath);
-
-            File.Delete(tempFilePath);
+            wallpaperManager.SetWallpaper(tempFilePath);
         }
+
+        static string ComputeHashFromStream(Stream stream)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(stream);
+
+                // Reset the stream position to the beginning
+                stream.Position = 0;
+
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
     }
 }
