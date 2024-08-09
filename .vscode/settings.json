@@ -1,6 +1,9 @@
 {
   "cSpell.words": [
     "appkit",
+    "cdylib",
+    "debuginfo",
+    "libloading",
     "linusromland",
     "nsstring",
     "NSURL",
