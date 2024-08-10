@@ -14,7 +14,7 @@ namespace WallPal
             }
             else if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                string homePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
                 appDirectory = Path.Combine(homePath, "." + Constants.AppName.ToLower());
             }

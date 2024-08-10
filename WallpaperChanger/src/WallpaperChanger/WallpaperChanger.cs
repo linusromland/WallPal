@@ -14,6 +14,10 @@ namespace WallPal
             {
                 wallpaperManager = new Windows.WindowsWallpaperManager();
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                wallpaperManager = new Darwin.DarwinWallpaperManager();
+            }
             else
             {
                 throw new PlatformNotSupportedException("Platform not implemented yet.");

@@ -28,6 +28,10 @@ fi
 # Get the Documents folder
 PLUGINS_DIR=~/Documents/WallPal/Plugins
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLUGINS_DIR=~/.wallpal/Plugins
+fi
+
 # Move the plugin to the WallPal plugin directory
 mkdir -p $PLUGINS_DIR
 cp -r bin/Debug/net8.0/$PROJECT_PATH.dll $PLUGINS_DIR/$PROJECT_PATH.dll
