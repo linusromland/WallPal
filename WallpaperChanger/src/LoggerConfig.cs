@@ -13,10 +13,12 @@ namespace WallPal
 
             LoggingConfiguration config = new();
 
-            FileTarget fileTarget = new FileTarget("fileTarget")
+            string logLayout = "[${longdate}] [${level}] [${logger}] ${message}";
+
+            FileTarget fileTarget = new("fileTarget")
             {
                 FileName = Path.Combine(logDir, "${shortdate}.log"),
-                Layout = "${longdate} [${logger}] ${message}",
+                Layout = logLayout,
                 ArchiveFileName = Path.Combine(logDir, "archives", "log.{#}.log"),
                 ArchiveNumbering = ArchiveNumberingMode.Rolling,
                 ArchiveEvery = FileArchivePeriod.Day,
@@ -25,11 +27,19 @@ namespace WallPal
                 KeepFileOpen = false,
                 Encoding = System.Text.Encoding.UTF8
             };
-
             config.AddTarget(fileTarget);
 
-            LoggingRule rule = new LoggingRule("*", LogLevel.Trace, fileTarget);
-            config.LoggingRules.Add(rule);
+            LoggingRule fileRule = new("*", LogLevel.Trace, fileTarget);
+            config.LoggingRules.Add(fileRule);
+
+            ConsoleTarget consoleTarget = new("consoleTarget")
+            {
+                Layout = logLayout
+            };
+            config.AddTarget(consoleTarget);
+
+            LoggingRule consoleRule = new("*", LogLevel.Info, consoleTarget);
+            config.LoggingRules.Add(consoleRule);
 
             LogManager.Configuration = config;
         }
