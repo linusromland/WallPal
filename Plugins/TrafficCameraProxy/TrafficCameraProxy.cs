@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace TrafficCameraProxy
 {
@@ -9,10 +10,17 @@ namespace TrafficCameraProxy
         public string cameraId;
     }
 
-    public class TrafficCameraProxy(IApplicationServices appServices) : IPlugin
+    public class TrafficCameraProxy : IPlugin
     {
-        private readonly IApplicationServices _appServices = appServices;
+        private readonly Logger _logger;
+        private readonly IApplicationServices _appServices;
         public string Name { get; } = "TrafficCameraProxy";
+
+        public TrafficCameraProxy(IApplicationServices appServices)
+        {
+            _logger = appServices.GetLogger();
+            _appServices = appServices;
+        }
 
 
         public bool IsReady()
@@ -20,10 +28,11 @@ namespace TrafficCameraProxy
             string? serverURL = GetURL();
             if (serverURL == null)
             {
+                _logger.Error("Missing serverURL or cameraId in config");
                 return false;
             }
 
-            using HttpClient client = new HttpClient();
+            using HttpClient client = new();
             try
             {
                 HttpResponseMessage response = client.GetAsync(serverURL).Result;
@@ -32,6 +41,7 @@ namespace TrafficCameraProxy
             }
             catch
             {
+                _logger.Error("Failed to connect to server");
                 return false;
             }
         }
@@ -75,6 +85,7 @@ namespace TrafficCameraProxy
             using HttpClient client = new HttpClient();
             HttpResponseMessage response = client.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
+            _logger.Info($"Got image from {url}");
             return response.Content.ReadAsStream();
         }
 

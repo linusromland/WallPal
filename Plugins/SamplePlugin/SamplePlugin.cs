@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace SamplePlugin;
 
@@ -8,10 +9,20 @@ public struct ConfigStruct
     public string imagePath;
 }
 
-public class SamplePlugin(IApplicationServices appServices) : IPlugin
+public class SamplePlugin : IPlugin
 {
-    private readonly IApplicationServices _appServices = appServices;
+    private readonly Logger _logger;
+    private readonly IApplicationServices _appServices;
+
+
     public string Name { get; } = "SamplePlugin";
+
+    public SamplePlugin(IApplicationServices appServices)
+    {
+        _logger = appServices.GetLogger();
+        _appServices = appServices;
+    }
+
 
     private string GetImagePath()
     {
@@ -23,6 +34,7 @@ public class SamplePlugin(IApplicationServices appServices) : IPlugin
             return imagePath;
         }
 
+        _logger.Error("Missing imagePath in config");
         return "";
 
     }
