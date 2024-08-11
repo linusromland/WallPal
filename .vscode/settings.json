@@ -1,13 +1,17 @@
 {
   "cSpell.words": [
+    "INSTDIR",
+    "instfiles",
     "longdate",
     "Newtonsoft",
     "osascript",
     "POSIX",
+    "PROGRAMFILES",
     "SENDCHANGE",
     "SETDESKWALLPAPER",
     "shortdate",
     "SPIF",
-    "UPDATEINIFILE"
+    "UPDATEINIFILE",
+    "wallpal"
   ]
 }
