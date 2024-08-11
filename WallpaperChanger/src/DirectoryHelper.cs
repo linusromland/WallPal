@@ -36,6 +36,14 @@ namespace WallPal
             return pluginDirectory;
         }
 
+        public static string GetLogsDirectory()
+        {
+            string logsDirectory = Path.Combine(GetAppDirectory(), Constants.LogsDirectoryName);
+            CreateDirectory(logsDirectory);
+
+            return logsDirectory;
+        }
+
         public static string GetConfigFilePath()
         {
             string configPath = Path.Combine(GetAppDirectory(), Constants.ConfigFileName);

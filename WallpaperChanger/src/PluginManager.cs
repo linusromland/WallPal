@@ -1,6 +1,7 @@
 using System.Reflection;
 using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 
 namespace WallPal
 {
@@ -9,6 +10,7 @@ namespace WallPal
         private readonly string _pluginDirectory;
         private readonly List<IPlugin> _plugins;
 
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public PluginManager(string pluginDirectory)
         {
@@ -21,7 +23,7 @@ namespace WallPal
         {
             foreach (var file in Directory.GetFiles(_pluginDirectory, "*.dll"))
             {
-                Console.WriteLine($"Loading plugin: {file}");
+                _logger.Info($"Loading plugin: {file}");
                 Assembly assembly = Assembly.LoadFrom(file);
                 foreach (Type type in assembly.GetTypes())
                 {
@@ -32,13 +34,13 @@ namespace WallPal
 
                         if (constructor == null)
                         {
-                            Console.WriteLine($"Type {pluginName} does not have a constructor that accepts IApplicationServices.");
+                            _logger.Error($"Type {pluginName} does not have a constructor that accepts IApplicationServices.");
                             continue;
                         }
 
                         if (_plugins.Any(p => p.Name == pluginName))
                         {
-                            Console.WriteLine($"Plugin {pluginName} is already loaded.");
+                            _logger.Warn($"Plugin {pluginName} is already loaded.");
                             continue;
                         }
 
@@ -50,7 +52,7 @@ namespace WallPal
 
                         IPlugin plugin = (IPlugin)constructor.Invoke([appServices]);
 
-                        Console.WriteLine($"Plugin {pluginName} loaded.");
+                        _logger.Info($"Plugin {pluginName} loaded.");
                         _plugins.Add(plugin);
                     }
                 }

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using NLog;
 
 namespace WallPal.Windows
 {
@@ -12,12 +13,14 @@ namespace WallPal.Windows
         private const int SPIF_UPDATEINIFILE = 0x01;
         private const int SPIF_SENDCHANGE = 0x02;
 
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         public void SetWallpaper(string imagePath)
         {
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentException("Image path cannot be null or empty.");
 
-            Console.WriteLine($"Setting Windows wallpaper to: {imagePath}");
+            _logger.Info($"Setting wallpaper to: {imagePath}");
             int result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
             if (result == 0)

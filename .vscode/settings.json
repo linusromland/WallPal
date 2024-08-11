@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
+    "longdate",
     "Newtonsoft",
     "osascript",
     "POSIX",
     "SENDCHANGE",
     "SETDESKWALLPAPER",
+    "shortdate",
     "SPIF",
     "UPDATEINIFILE"
   ]

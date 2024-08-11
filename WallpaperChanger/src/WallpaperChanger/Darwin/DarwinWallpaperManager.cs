@@ -1,17 +1,20 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using NLog;
 
 namespace WallPal.Darwin
 {
     public class DarwinWallpaperManager : IWallpaperManager
     {
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         public void SetWallpaper(string imagePath)
         {
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentException("Image path cannot be null or empty.");
 
-            Console.WriteLine($"Setting macOS wallpaper to: {imagePath}");
+            _logger.Info($"Setting wallpaper to: {imagePath}");
 
             string script = $"tell application \"System Events\" to set picture of every desktop to \"{imagePath}\"";
 
@@ -47,8 +50,6 @@ namespace WallPal.Darwin
                 {
                     throw new Exception($"Error setting wallpaper: {error}");
                 }
-
-                Console.WriteLine(output);
             }
             finally
             {

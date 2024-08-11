@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using NLog;
 
 namespace WallPal
 {
@@ -6,8 +7,12 @@ namespace WallPal
     {
         private static WallpaperChanger _wallpaperChanger = new();
 
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
         static async Task Main(string[] args)
         {
+            LoggerConfig.ConfigureNLog();
+
             while (true)
             {
                 ChangeWallpaper();
@@ -15,12 +20,12 @@ namespace WallPal
                 int? refreshInterval = ConfigManager.GetConfigIntValue("refreshInterval");
                 if (refreshInterval == null)
                 {
-                    Console.WriteLine("No refresh interval specified in config file. Using default value of 5 minutes.");
+                    _logger.Warn("No refresh interval specified in config file. Using default value of 5 minutes.");
                     refreshInterval = 5 * 60;
                 }
                 else
                 {
-                    Console.WriteLine($"Next wallpaper change in {refreshInterval} seconds.");
+                    _logger.Info($"Next wallpaper change in {refreshInterval} seconds.");
                 }
 
                 await Task.Delay(refreshInterval.Value * 1000);
@@ -35,7 +40,7 @@ namespace WallPal
             string? source = ConfigManager.GetConfigValue("source");
             if (source == null)
             {
-                Console.WriteLine("No source specified in config file.");
+                _logger.Error("No source specified in config file.");
                 return;
             }
 
@@ -48,22 +53,22 @@ namespace WallPal
                     using Stream imageStream = plugin.GetWallpaperStream();
                     if (imageStream != null)
                     {
-                        Console.WriteLine($"Changing wallpaper using plugin: {plugin.Name}");
+                        _logger.Info($"Changing wallpaper using plugin: {plugin.Name}");
                         _wallpaperChanger.ChangeWallpaper(imageStream);
                     }
                     else
                     {
-                        Console.WriteLine("Plugin did not provide an image stream.");
+                        _logger.Error("Plugin did not provide an image stream.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Plugin is not ready.");
+                    _logger.Error("Plugin is not ready.");
                 }
             }
             else
             {
-                Console.WriteLine($"Plugin {source} not found.");
+                _logger.Error($"Plugin {source} not found.");
             }
         }
     }

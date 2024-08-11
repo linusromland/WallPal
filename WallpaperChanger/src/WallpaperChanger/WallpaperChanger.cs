@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using NLog;
 
 namespace WallPal
 {
@@ -7,6 +8,8 @@ namespace WallPal
     {
         private string lastHash = string.Empty;
         private readonly IWallpaperManager wallpaperManager;
+
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public WallpaperChanger()
         {
@@ -29,7 +32,7 @@ namespace WallPal
             string hash = ComputeHashFromStream(imageStream);
             if (hash == lastHash && !string.IsNullOrEmpty(lastHash))
             {
-                Console.WriteLine("Image has not changed. Skipping wallpaper change.");
+                _logger.Info("Image has not changed. Skipping wallpaper change.");
                 return;
             }
 
