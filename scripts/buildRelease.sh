@@ -25,7 +25,7 @@ pip install -r requirements.txt
 rm -rf dist/*
 rm -rf build/*
 python ../scripts/buildAppManager.py
-mv ../$OUTPUT_DIR/app/WallPal.exe ../$OUTPUT_DIR/app/MainApp.exe
+mv ../$OUTPUT_DIR/app/WallPal.exe ../$OUTPUT_DIR/app/WallPal_Service.exe
 cp dist/main.exe ../$OUTPUT_DIR/app/WallPal.exe
 cp icon.png ../$OUTPUT_DIR/app/icon.png
 cd ..   

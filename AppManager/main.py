@@ -5,8 +5,12 @@ import sys
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 from PIL import Image
 import portalocker
+import winreg
 
-WALLPAL_SERVICE_EXE = "./MainApp.exe"
+WALLPAL_SERVICE_EXE_PROD = "./WallPal_Service.exe"
+WALLPAL_SERVICE_EXE_DEV = "C:\\Program Files (x86)\\WallPal\\WallPal_Service.exe"
+WALLPAL_SERVICE_EXE = WALLPAL_SERVICE_EXE_PROD if os.path.exists(WALLPAL_SERVICE_EXE_PROD) else WALLPAL_SERVICE_EXE_DEV
+
 
 def start_service():
     image = Image.open("icon.png")
@@ -32,10 +36,13 @@ def start_service():
             elif platform.system() == "Linux":
                 subprocess.call(('xdg-open', config_path))
 
-    state = False
+    state = check_autostart()
+
     def handle_autoboot(icon, item):
         nonlocal state
         state = not item.checked
+        set_autostart(state)
+        icon.update_menu()
 
     def handle_exit(icon):
         print("Exiting WallPal Service...")
@@ -60,6 +67,39 @@ def single_instance_check():
 
     return lock_file
 
+def set_autostart(enabled):
+    key = r"Software\Microsoft\Windows\CurrentVersion\Run"
+    try:
+        registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key, 0, winreg.KEY_SET_VALUE)
+        if enabled:
+
+            winreg.SetValueEx(registry_key, "WallPalService", 0, winreg.REG_SZ, "C:\\Program Files (x86)\\WallPal\\WallPal.exe")
+        else:
+            try:
+                winreg.DeleteValue(registry_key, "WallPalService")
+            except FileNotFoundError:
+                pass
+    except Exception as e:
+        print(f"Failed to set autostart: {e}")
+    finally:
+        print("Autostart set to", enabled)
+        winreg.CloseKey(registry_key)
+
+def check_autostart():
+    key = r"Software\Microsoft\Windows\CurrentVersion\Run"
+    try:
+        registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key, 0, winreg.KEY_READ)
+        try:
+            value, _ = winreg.QueryValueEx(registry_key, "WallPalService")
+            return value == WALLPAL_SERVICE_EXE
+        except FileNotFoundError:
+            return False
+    except Exception as e:
+        print(f"Failed to check autostart: {e}")
+        return False
+    finally:
+        winreg.CloseKey(registry_key)
+
 def main():
     lock_file = single_instance_check()
 
@@ -67,7 +107,6 @@ def main():
 
     lock_file.close()
     os.remove(lock_file.name)
-
 
 if __name__ == "__main__":
     main()
