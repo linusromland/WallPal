@@ -7,13 +7,18 @@ from PIL import Image
 import portalocker
 import winreg
 
-WALLPAL_SERVICE_EXE_PROD = "./WallPal_Service.exe"
-WALLPAL_SERVICE_EXE_DEV = "C:\\Program Files (x86)\\WallPal\\WallPal_Service.exe"
-WALLPAL_SERVICE_EXE = WALLPAL_SERVICE_EXE_PROD if os.path.exists(WALLPAL_SERVICE_EXE_PROD) else WALLPAL_SERVICE_EXE_DEV
+IS_DEV = False
+
+WALLPAL_DIRECTORY_PROD = "C:\\Program Files (x86)\\WallPal\\"
+WALLPAL_DIRECTORY_DEV = "./"
+WALLPAL_DIRECTORY = WALLPAL_DIRECTORY_PROD if IS_DEV == False else WALLPAL_DIRECTORY_DEV
+
+WALLPAL_SERVICE_EXE_FILE = "WallPal_Service.exe"
+WALLPAL_SERVICE_EXE = WALLPAL_DIRECTORY + WALLPAL_SERVICE_EXE_FILE
 
 
 def start_service():
-    image = Image.open("icon.png")
+    image = Image.open(WALLPAL_DIRECTORY + "icon.png")
 
     print("Starting WallPal Service...")
     if platform.system() == "Windows":
@@ -91,7 +96,7 @@ def check_autostart():
         registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key, 0, winreg.KEY_READ)
         try:
             value, _ = winreg.QueryValueEx(registry_key, "WallPalService")
-            return value == WALLPAL_SERVICE_EXE
+            return True
         except FileNotFoundError:
             return False
     except Exception as e:
