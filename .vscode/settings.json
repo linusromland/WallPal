@@ -12,6 +12,10 @@
     "shortdate",
     "SPIF",
     "UPDATEINIFILE",
-    "wallpal"
+    "wallpal",
+    "autoboot",
+    "portalocker",
+    "startfile",
+    "pystray"
   ]
 }
