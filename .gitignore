@@ -402,3 +402,6 @@ appsettings.json
 
 sounds/*
 !sounds/.gitkeep
+
+dist/
+build/

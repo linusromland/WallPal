@@ -3,6 +3,7 @@
 # Define project directories
 PLUGINS=("SamplePlugin" "TrafficCameraProxy")
 PLUGIN_DIR="Plugins"
+APP_MANAGER_DIR="AppManager"
 MAINAPP_NAME="WallPal"
 OUTPUT_DIR="release"
 
@@ -16,6 +17,18 @@ fi
 cd $MAINAPP_NAME
 dotnet publish -c Release -o ../$OUTPUT_DIR/app
 cd ..
+
+# Build the app manager
+cd $APP_MANAGER_DIR
+pip install pyinstaller 
+pip install -r requirements.txt 
+rm -rf dist/*
+rm -rf build/*
+python ../scripts/buildAppManager.py
+mv ../$OUTPUT_DIR/app/WallPal.exe ../$OUTPUT_DIR/app/MainApp.exe
+cp dist/main.exe ../$OUTPUT_DIR/app/WallPal.exe
+cp icon.png ../$OUTPUT_DIR/app/icon.png
+cd ..   
 
 # Build the plugins
 for PLUGIN in "${PLUGINS[@]}"
@@ -39,7 +52,6 @@ do
 done
 
 # Build the NSIS installer
-
 "C:\Program Files (x86)\NSIS\makensis.exe" "windows_setup.nsi"
 if [ $? -ne 0 ]; then
     echo "NSIS installer creation failed."

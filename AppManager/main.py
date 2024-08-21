@@ -6,7 +6,7 @@ from pystray import Icon as icon, Menu as menu, MenuItem as item
 from PIL import Image
 import portalocker
 
-WALLPAL_SERVICE_EXE = "C:\\Program Files (x86)\\WallPal\\WallPal.exe"
+WALLPAL_SERVICE_EXE = "./MainApp.exe"
 
 def start_service():
     image = Image.open("icon.png")

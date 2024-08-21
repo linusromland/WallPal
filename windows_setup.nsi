@@ -7,6 +7,8 @@ InstallDir "$PROGRAMFILES\WallPal"
 ; Request administrative privileges
 RequestExecutionLevel admin
 
+!define MUI_AUTHOR "Linus Romland"
+
 Page directory
 Page instfiles
 

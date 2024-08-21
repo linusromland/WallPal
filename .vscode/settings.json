@@ -16,6 +16,8 @@
     "autoboot",
     "portalocker",
     "startfile",
-    "pystray"
+    "pystray",
+    "onefile",
+    "Romland"
   ]
 }
