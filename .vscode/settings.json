@@ -18,6 +18,7 @@
     "startfile",
     "pystray",
     "onefile",
-    "Romland"
+    "Romland",
+    "creationflags"
   ]
 }

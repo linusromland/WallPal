@@ -12,7 +12,11 @@ def start_service():
     image = Image.open("icon.png")
 
     print("Starting WallPal Service...")
-    api_pid = subprocess.Popen([WALLPAL_SERVICE_EXE])
+    if platform.system() == "Windows":
+        creation_flags = subprocess.CREATE_NO_WINDOW
+        service_pid = subprocess.Popen([WALLPAL_SERVICE_EXE], creationflags=creation_flags)
+    else:
+        service_pid = subprocess.Popen([WALLPAL_SERVICE_EXE])
     print("WallPal Service started successfully.")
 
     def handle_open_config():
@@ -35,7 +39,7 @@ def start_service():
 
     def handle_exit(icon):
         print("Exiting WallPal Service...")
-        api_pid.kill()
+        service_pid.kill()
         icon.stop()
 
     icon('WallPal Service', image, menu=menu(
